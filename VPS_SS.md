@@ -2,7 +2,7 @@
 
 
 
-## 1.租用VPS服务器
+## 1. 租用VPS服务器
 
 VPS的全称是Virtual Private Server，即虚拟专用服务器。我使用的VPS供应商是[Vultr](https://www.vultr.com/)，一个月5美元。
 
@@ -10,7 +10,7 @@ VPS的全称是Virtual Private Server，即虚拟专用服务器。我使用的V
 
 
 
-## 2.配置VPS服务器
+## 2. 配置VPS服务器
 
 ### 2.1 一键安装
 首先往Vultr账户里充钱，然后选择适合自己的服务器，记得勾选上`Enable IPv6`这个选项。
@@ -107,7 +107,7 @@ sudo systemctl start shadowsocks-libev      # for systemd
 
 
 
-## 3.配置本地SS
+## 3. 配置本地SS
 
 ### 3.1 Windows
 下载[Windows Shadowsocks客户端](https://github.com/shadowsocks/shadowsocks-windows/releases)，我使用的是`Shadowsocks-4.1.3.1`版本，不用安装解压即可。填写完服务器地址、服务器端口、密码和加密之后（代理端口默认为1080），点击确定即可。
@@ -177,11 +177,43 @@ Start shadowsocks as a daemon with specific pid file.
 > 执行以上命令只是打开了特定的SOCKS5监听端口，全局模式需要更改系统的网络代理设置，例如在`Ubuntu 24.04 LTS x64`中，更改`设置-网络-代理-配置（手动）-SOCKS主机`为`shadowsocks-libev`监听的本地地址和本地端口。
 
 ### 3.3 macOS
-使用[MacOS Shadowsocks客户端1](https://github.com/shadowsocks/shadowsocks-iOS/releases)或[客户端2](https://github.com/shadowsocks/ShadowsocksX-NG/releases)。
+macOS上的GUI客户端有[MacOS Shadowsocks客户端1](https://github.com/shadowsocks/shadowsocks-iOS/releases)和[客户端2](https://github.com/shadowsocks/ShadowsocksX-NG/releases)。
+我选择的是CLI客户端[`shadowsocks-libev`](https://github.com/shadowsocks/shadowsocks-libev)，通过[Homebrew](https://brew.sh/)安装如下：
+```
+# 1. Install Command Line Tools (CLT) for Xcode
+xcode-select --install
+
+# 2. Download Homebrew .pkg installer from Homebrew's latest GitHub release and install it
+# https://github.com/Homebrew/brew/releases/tag/4.3.20
+
+# 3. Install shadowsocks-libev
+brew install shadowsocks-libev
+```
+
+修改`/usr/local/etc/shadowsocks-libev.json`配置文件，内容和Ubuntu上的`/etc/shadowsocks-libev/config.json`配置文件相同：
+```
+brew services stop shadowsocks-libev
+vim /usr/local/etc/shadowsocks-libev.json
+brew services start shadowsocks-libev
+```
+
+Homebrew的相关命令如下：
+```
+brew services list
+
+brew services info shadowsocks-libev
+
+brew services start|stop|restart shadowsocks-libev
+
+To restart shadowsocks-libev after an upgrade:
+brew services restart shadowsocks-libev
+Or, if you don't want/need a background service you can just run:
+/usr/local/opt/shadowsocks-libev/bin/ss-local -c /usr/local/etc/shadowsocks-libev.json
+```
 
 
 
-## 4.配置Chrome Proxy SwitchyOmega
+## 4. 配置Chrome Proxy SwitchyOmega
 
 > 通常而言并不需要启用系统代理，而是通过本地联网软件提供的代理功能和SS客户端提供的代理端口来使用VPS代理服务器上网。
 
